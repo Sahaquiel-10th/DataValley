@@ -1,7 +1,8 @@
 "use client"
 
 export function HeroSection() {
-  const videoSrc = process.env.NEXT_PUBLIC_VIDEO1_URL || "/video01.mp4"
+  // Fallback to hosted file so deployment still works even if env is missing at build time
+  const videoSrc = process.env.NEXT_PUBLIC_VIDEO1_URL || "https://datavalleymedia.aiarrival.cn/video01.mp4"
 
   return (
     <section className="relative w-full bg-black">
