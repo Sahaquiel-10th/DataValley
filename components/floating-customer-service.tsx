@@ -73,6 +73,9 @@ export function FloatingCustomerService() {
     setMessages((prev) => [...prev, { role: "user", content: question }, { role: "assistant", content: "" }])
     setIsSending(true)
 
+    let assistantText = ""
+    let receivedValidData = false
+
     try {
       const response = await fetch("/api/coze", {
         method: "POST",
@@ -83,13 +86,38 @@ export function FloatingCustomerService() {
       })
 
       if (!response.ok || !response.body) {
-        throw new Error("客服接口暂时不可用，请稍后再试")
+        setError("接口有问题")
+        appendAssistantContent("接口有问题")
+        return
       }
 
       const reader = response.body.getReader()
       const decoder = new TextDecoder()
       let buffer = ""
-      let assistantText = ""
+      let pendingData = ""
+
+      const processData = (dataSegment: string) => {
+        const trimmed = dataSegment.trim()
+        if (!trimmed) return
+
+        const looksLikeJson = ["{", "[", '"'].some((token) => trimmed.startsWith(token))
+        if (!looksLikeJson && !pendingData) return
+
+        pendingData += trimmed
+        try {
+          const parsed = JSON.parse(pendingData)
+          pendingData = ""
+          const chunkText = extractTextFromPayload(parsed)
+          if (!chunkText) return
+          receivedValidData = true
+          assistantText += chunkText
+          appendAssistantContent(assistantText)
+        } catch {
+          if (!pendingData.trimStart().startsWith("{") && !pendingData.trimStart().startsWith("[") && !pendingData.trimStart().startsWith('"')) {
+            pendingData = ""
+          }
+        }
+      }
 
       while (true) {
         const { done, value } = await reader.read()
@@ -101,48 +129,34 @@ export function FloatingCustomerService() {
 
         for (const rawLine of lines) {
           const line = rawLine.trim()
-          if (!line || line === "data: [DONE]" || line.startsWith("event:")) continue
+          if (!line || line.startsWith(":")) continue
+          if (!line.startsWith("data:")) continue
 
-          const dataString = line.startsWith("data:") ? line.slice(5).trim() : line
+          const dataString = line.slice(5).trim()
+          if (!dataString || dataString === "[DONE]") continue
 
-          let chunkText = ""
-          try {
-            const parsed = JSON.parse(dataString)
-            chunkText = extractTextFromPayload(parsed)
-          } catch {
-            chunkText = dataString
-          }
-
-          if (!chunkText) continue
-          assistantText += chunkText
-          appendAssistantContent(assistantText)
+          processData(dataString)
         }
       }
 
-      const pendingLine = buffer.trim()
-      if (pendingLine && !pendingLine.startsWith("event:")) {
-        const dataString = pendingLine.startsWith("data:") ? pendingLine.slice(5).trim() : pendingLine
-        let chunkText = ""
-        try {
-          const parsed = JSON.parse(dataString)
-          chunkText = extractTextFromPayload(parsed)
-        } catch {
-          chunkText = dataString
-        }
-        if (chunkText) {
-          assistantText += chunkText
-          appendAssistantContent(assistantText)
+      const tail = buffer.trim()
+      if (tail.startsWith("data:")) {
+        const dataString = tail.slice(5).trim()
+        if (dataString && dataString !== "[DONE]") {
+          processData(dataString)
         }
       }
 
-      // If upstream closed without sending text, show a friendly fallback.
-      if (!assistantText) {
-        appendAssistantContent("抱歉，暂时没有获取到回复，请稍后重试。")
+      if (!receivedValidData) {
+        setError("接口有问题")
+        appendAssistantContent("接口有问题")
       }
     } catch (err) {
       console.error("Failed to send message", err)
-      setError("客服接口暂时不可用，请稍后再试")
-      appendAssistantContent("抱歉，客服接口暂时不可用，请稍后再试。")
+      if (!receivedValidData) {
+        setError("接口有问题")
+        appendAssistantContent("接口有问题")
+      }
     } finally {
       setIsSending(false)
     }
