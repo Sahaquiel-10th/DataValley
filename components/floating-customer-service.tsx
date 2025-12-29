@@ -29,6 +29,23 @@ export function FloatingCustomerService() {
     })
   }
 
+  const isAckOrPingPayload = (payload: unknown): boolean => {
+    if (!payload) return false
+    if (typeof payload === "string") {
+      const normalized = payload.trim().toLowerCase()
+      return normalized === "ack" || normalized === "ping"
+    }
+
+    if (typeof payload === "object") {
+      const data = payload as Record<string, any>
+      const type = typeof data.type === "string" ? data.type.toLowerCase() : ""
+      const event = typeof data.event === "string" ? data.event.toLowerCase() : ""
+      return type === "ack" || type === "ping" || event === "ack" || event === "ping"
+    }
+
+    return false
+  }
+
   const extractTextFromPayload = (payload: unknown): string => {
     // The upstream API streams Server Sent Events with JSON payloads; we try a few common shapes.
     if (!payload) return ""
@@ -106,6 +123,10 @@ export function FloatingCustomerService() {
         pendingData += trimmed
         try {
           const parsed = JSON.parse(pendingData)
+          if (isAckOrPingPayload(parsed)) {
+            pendingData = ""
+            return
+          }
           pendingData = ""
           const chunkText = extractTextFromPayload(parsed)
           if (!chunkText) return
