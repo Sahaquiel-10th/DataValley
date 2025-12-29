@@ -29,58 +29,6 @@ export function FloatingCustomerService() {
     })
   }
 
-  const isAckOrPingPayload = (payload: unknown): boolean => {
-    if (!payload) return false
-    if (typeof payload === "string") {
-      const normalized = payload.trim().toLowerCase()
-      return normalized === "ack" || normalized === "ping"
-    }
-
-    if (typeof payload === "object") {
-      const data = payload as Record<string, any>
-      const type = typeof data.type === "string" ? data.type.toLowerCase() : ""
-      const event = typeof data.event === "string" ? data.event.toLowerCase() : ""
-      return type === "ack" || type === "ping" || event === "ack" || event === "ping"
-    }
-
-    return false
-  }
-
-  const extractTextFromPayload = (payload: unknown): string => {
-    // The upstream API streams Server Sent Events with JSON payloads; we try a few common shapes.
-    if (!payload) return ""
-    if (typeof payload === "string") return payload
-
-    if (typeof payload === "object") {
-      const data = payload as Record<string, any>
-
-      if (typeof data.type === "string" && data.type === "answer" && data.content?.answer) {
-        return typeof data.content.answer === "string" ? data.content.answer : ""
-      }
-
-      if (typeof data.content === "string") return data.content
-      if (Array.isArray(data.content)) {
-        return data.content
-          .map((item) => (typeof item === "string" ? item : item?.text ?? item?.content ?? ""))
-          .join("")
-      }
-
-      if (typeof data.msg === "string") return data.msg
-
-      if (data.data) {
-        const nested = data.data
-        if (typeof nested.content === "string") return nested.content
-        if (Array.isArray(nested.content)) {
-          return nested.content
-            .map((item: any) => (typeof item === "string" ? item : item?.text ?? item?.content ?? ""))
-            .join("")
-        }
-      }
-    }
-
-    return ""
-  }
-
   const handleSend = async () => {
     if (!inputValue.trim() || isSending) return
 
@@ -90,95 +38,58 @@ export function FloatingCustomerService() {
     setMessages((prev) => [...prev, { role: "user", content: question }, { role: "assistant", content: "" }])
     setIsSending(true)
 
-    let assistantText = ""
-    let receivedValidData = false
+    let timeoutId: number | undefined
 
     try {
-      const response = await fetch("/api/coze", {
+      const controller = new AbortController()
+      timeoutId = window.setTimeout(() => controller.abort(), 60000)
+
+      const response = await fetch("/api/wainao_proxy", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ message: question }),
+        body: JSON.stringify({ text: question }),
+        signal: controller.signal,
       })
 
-      if (!response.ok || !response.body) {
+      if (!response.ok) {
         setError("问的人太多啦，等下再问？")
         appendAssistantContent("问的人太多啦，等下再问？")
         return
       }
 
-      const reader = response.body.getReader()
-      const decoder = new TextDecoder()
-      let buffer = ""
-      let pendingData = ""
-
-      const processData = (dataSegment: string) => {
-        const trimmed = dataSegment.trim()
-        if (!trimmed) return
-
-        const looksLikeJson = ["{", "[", '"'].some((token) => trimmed.startsWith(token))
-        if (!looksLikeJson && !pendingData) return
-
-        pendingData += trimmed
-        try {
-          const parsed = JSON.parse(pendingData)
-          if (isAckOrPingPayload(parsed)) {
-            pendingData = ""
-            return
-          }
-          pendingData = ""
-          const chunkText = extractTextFromPayload(parsed)
-          if (!chunkText) return
-          receivedValidData = true
-          assistantText += chunkText
-          appendAssistantContent(assistantText)
-        } catch {
-          if (!pendingData.trimStart().startsWith("{") && !pendingData.trimStart().startsWith("[") && !pendingData.trimStart().startsWith('"')) {
-            pendingData = ""
-          }
-        }
+      let data: unknown = null
+      try {
+        data = await response.json()
+      } catch (parseErr) {
+        console.error("Failed to parse coze_proxy response", parseErr)
       }
 
-      while (true) {
-        const { done, value } = await reader.read()
-        if (done) break
+      const replyText =
+        data && typeof data === "object" && typeof (data as { text?: string }).text === "string"
+          ? (data as { text?: string }).text.trim()
+          : ""
 
-        buffer += decoder.decode(value, { stream: true })
-        const lines = buffer.split("\n")
-        buffer = lines.pop() ?? ""
-
-        for (const rawLine of lines) {
-          const line = rawLine.trim()
-          if (!line || line.startsWith(":")) continue
-          if (!line.startsWith("data:")) continue
-
-          const dataString = line.slice(5).trim()
-          if (!dataString || dataString === "[DONE]") continue
-
-          processData(dataString)
-        }
-      }
-
-      const tail = buffer.trim()
-      if (tail.startsWith("data:")) {
-        const dataString = tail.slice(5).trim()
-        if (dataString && dataString !== "[DONE]") {
-          processData(dataString)
-        }
-      }
-
-      if (!receivedValidData) {
+      if (replyText) {
+        appendAssistantContent(replyText)
+      } else {
         setError("问的人太多啦，等下再问？")
         appendAssistantContent("问的人太多啦，等下再问？")
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error("Failed to send message", err)
-      if (!receivedValidData) {
+      if (err?.name === "AbortError") {
+        setError("请求超时，请稍后再试")
+        appendAssistantContent("请求超时，请稍后再试")
+      } else {
         setError("问的人太多啦，等下再问？")
         appendAssistantContent("问的人太多啦，等下再问？")
       }
     } finally {
+      if (timeoutId) {
+        window.clearTimeout(timeoutId)
+      }
       setIsSending(false)
     }
   }
