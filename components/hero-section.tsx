@@ -8,7 +8,7 @@ export function HeroSection() {
     <section className="relative w-full bg-black">
       <div className="border-b border-white/10 px-4 py-6 text-center md:px-6 md:py-12">
         <h1 className="mb-2 font-mono text-3xl font-bold text-white md:mb-3 md:text-5xl text-balance">城投资产·未来数智港</h1>
-        <p className="text-sm text-white/70 md:text-lg text-balance">杭州东站旁的数智产业新地标</p>
+        <p className="text-sm text-white/70 md:text-lg text-balance">一人独角兽 OPC入杭第一站</p>
       </div>
 
       <div className="relative mx-auto max-w-6xl px-4 py-6 md:py-12">
