@@ -6,17 +6,17 @@ const qrCodes = [
   {
     title: "小红书",
     description: "搜索与关注园区故事",
-    src: "/小红书.png",
+    src: "https://media-1383535556.cos.ap-shanghai.myqcloud.com/%E5%B0%8F%E7%BA%A2%E4%B9%A6.png",
   },
   {
-    title: "微信",
+    title: "公众号",
     description: "扫码联系园区顾问",
-    src: "/公众号.png",
+    src: "https://media-1383535556.cos.ap-shanghai.myqcloud.com/%E5%85%AC%E4%BC%97%E5%8F%B7.png",
   },
   {
     title: "抖音",
     description: "视频看园区动态",
-    src: "/抖音.png",
+    src: "https://media-1383535556.cos.ap-shanghai.myqcloud.com/%E6%8A%96%E9%9F%B3.png",
   },
 ]
 
@@ -33,13 +33,9 @@ export function QRCodeSection() {
         <div className="mx-auto max-w-5xl">
           <div className="grid grid-cols-3 gap-4">
             {qrCodes.map((qr) => (
-              <div key={qr.title} className="flex flex-col items-center gap-2">
+              <div key={qr.title} className="flex flex-col items-center">
                 <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-xl bg-white sm:h-28 sm:w-28 md:h-32 md:w-32">
                   <img src={qr.src} alt={qr.title} className="h-full w-full object-contain" />
-                </div>
-                <div className="text-center">
-                  <h3 className="mb-1 text-sm font-bold sm:text-base md:mb-1.5">{qr.title}</h3>
-                  <p className="text-xs text-muted-foreground sm:text-sm">{qr.description}</p>
                 </div>
               </div>
             ))}

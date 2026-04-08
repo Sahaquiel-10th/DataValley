@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { ArrowUpRight } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
@@ -8,8 +9,51 @@ import { Card } from "@/components/ui/card"
 const services = [
   { title: "政务服务", detail: "联动市、区数据局、发改经信局等部门，提供政策解读、项目申报、场景对接。" },
   { title: "金融服务", detail: "合作杭州城基投资、方圆金鼎等机构，为企业提供融资对接与资本赋能。" },
-  { title: "产业服务", detail: "举办“潮起钱塘沙龙”“浙大银发经济论坛”“AI切磋大会”等品牌活动，搭建产业交流平台。" },
-  { title: "社群运营", detail: "打造“创见者说”企业故事计划，构建“招商+品牌+社群”IP共生平台。" },
+  { title: "共享算力", detail: "依托杭州城投资源，构建共享算力网络，提供轻量化、低成本算力服务，破解技术研发瓶颈，赋能个人创业者。" },
+  { title: "社群运营", detail: "依托“城投资产·星聚荟”及 WaytoAGI 开放社群，举办 AI 切磋、政策解读等活动，构建高频互动、资源共享的创新社群。" },
+]
+
+const opcPolicies = [
+  {
+    badge: "专项政策",
+    title: "全省首个 OPC 专项政策",
+    content: (
+      <>
+        <p>
+          通过构建“135”赋能体系打造“OPC 创业第一城”。每年安排 1 亿元专项资金，为不同发展阶段的 OPC
+          提供精准服务，计划到 2026 年实现建设 10 个 OPC 社区、集聚 1000 名创业者的目标。
+        </p>
+      </>
+    ),
+  },
+  {
+    badge: "五维赋能",
+    title: "全周期精准服务矩阵",
+    content: (
+      <>
+        <ul className="grid gap-2 text-foreground">
+          <li className="rounded-lg bg-muted/50 px-4 py-3 text-sm leading-relaxed">
+            <span className="font-semibold">空间：</span>提供超 2 万平方米“拎包入驻”社区和人才驿站，实现低成本启动。
+          </li>
+          <li className="rounded-lg bg-muted/50 px-4 py-3 text-sm leading-relaxed">
+            <span className="font-semibold">要素：</span>创新推出 AI 工具会员池，免费提供算力模型等“即开即用”服务。
+          </li>
+          <li className="rounded-lg bg-muted/50 px-4 py-3 text-sm leading-relaxed">
+            <span className="font-semibold">金融：</span>提供最高 50 万元个人贷款及 200 万元投资奖励。
+          </li>
+          <li className="rounded-lg bg-muted/50 px-4 py-3 text-sm leading-relaxed">
+            <span className="font-semibold">场景：</span>开放城市场景并设立最高 300 万元的应用示范补助。
+          </li>
+          <li className="rounded-lg bg-muted/50 px-4 py-3 text-sm leading-relaxed">
+            <span className="font-semibold">人才：</span>通过评选“超级个体”给予最高 20 万元奖励及高层次人才认定。
+          </li>
+        </ul>
+        <p>
+          同时，上城还将搭建“一键通达”线上平台，组建专业陪跑服务团和生态联盟，为创业者提供从落地到产业化的全周期精准赋能。
+        </p>
+      </>
+    ),
+  },
 ]
 
 const gallery = [
@@ -134,11 +178,23 @@ export function IntroductionSection() {
               <h3 className="text-xl font-semibold text-foreground md:text-2xl">陪伴企业从 0 到 1</h3>
               <ExpandableText>
                 <p>
-                  园区四层专设科技孵化长廊，提供 125 个孵化工位与 7 间独立孵化室。符合条件的数智科创类企业可享受 3 个月至 3 年的孵化培育，期间进行季度评估与系统辅导；孵化期满后，优秀企业可转为正式办公客户，持续在园区成长，目前已签约孵化企业 6 家，形成创新集聚效应。
+                  园区四层专设科技孵化长廊，提供 125 个孵化工位与 7 间独立孵化室。符合条件的数智科创类企业可享受 3 个月至 3 年的孵化培育，期间进行季度评估与系统辅导；孵化期满后，优秀企业可转为正式办公客户，持续在园区成长，目前，整栋楼出租率已达80%，其中专门面向OPC群体开放的8000平方米产业空间内，已集聚“一人公司”14家，另有数十个工位处于预定状态。园区设立的125个免费孵化工位已满额使用，初步形成初创主体加速涌入的良好态势。按照2026年发展目标，园区计划集聚人工智能重点企业30家以上，引进培育OPC青年人才300名以上。
                 </p>
               </ExpandableText>
             </div>
           </Card>
+
+          {opcPolicies.map((policy) => (
+            <Card key={policy.title} className="border border-muted-foreground/10 bg-card shadow-xl">
+              <div className="flex flex-col gap-4 p-6 md:p-8">
+                <Badge variant="secondary" className={`w-fit px-3 py-1 text-xs uppercase tracking-wide ${deepBlueBadge}`}>
+                  {policy.badge}
+                </Badge>
+                <h3 className="text-xl font-semibold text-foreground md:text-2xl">{policy.title}</h3>
+                <ExpandableText>{policy.content}</ExpandableText>
+              </div>
+            </Card>
+          ))}
 
           <Card className="border border-muted-foreground/10 bg-card shadow-xl">
             <div className="flex flex-col gap-4 p-6 md:p-8">
@@ -158,16 +214,33 @@ export function IntroductionSection() {
           </Card>
         </div>
 
+        <div className="mt-8 flex justify-center lg:justify-start">
+          <Button
+            asChild
+            size="lg"
+            className="h-auto rounded-full border border-[#0B2F6C]/10 bg-gradient-to-r from-[#0B2F6C] via-[#134AA3] to-[#1E63D6] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[#0B2F6C]/20 transition hover:scale-[1.02] hover:shadow-xl hover:shadow-[#0B2F6C]/25"
+          >
+            <a
+              href="https://media-1383535556.cos.ap-shanghai.myqcloud.com/%E5%85%A5%E9%A9%BB%E6%B5%81%E7%A8%8B%E8%A1%A8.zip"
+              target="_blank"
+              rel="noreferrer"
+            >
+              入驻流程
+              <ArrowUpRight className="size-4" />
+            </a>
+          </Button>
+        </div>
+
         <div className="mt-8 grid gap-6 lg:grid-cols-[1.2fr,0.8fr]">
           <Card className="border border-muted-foreground/10 bg-card shadow-xl">
             <div className="flex flex-col gap-4 p-6 md:p-8">
               <Badge variant="secondary" className={`w-fit px-3 py-1 text-xs uppercase tracking-wide ${deepBlueBadge}`}>
                 发展愿景
               </Badge>
-              <h3 className="text-xl font-semibold text-foreground md:text-2xl">打造中国数谷·城市运营数据要素产业园</h3>
+              <h3 className="text-xl font-semibold text-foreground md:text-2xl">OPC 入杭第一站</h3>
               <ExpandableText>
                 <p>
-                  在杭州市、上城区两级政府的高度重视与指导下，未来数智港正积极申报建设“中国数谷·城市运营数据要素产业园”。园区将充分发挥城投集团的数据资源优势与东站枢纽的流量优势，推动“客流”变“人流”、“人流”带“钱流”、“钱流”融“数据流”，构建以城市运营数据要素为核心的全产业链生态。
+                  培育 OPC，是杭州发展新质生产力、汇聚数字人才、融入“中国数谷”建设战略的创新举措。城投资产·未来数智港依托杭州城投丰富的城市运营场景与平台资源，正持续探索 OPC 成长的“杭州模式”，致力于打造长三角区域创新引领策源地。
                 </p>
               </ExpandableText>
             </div>
