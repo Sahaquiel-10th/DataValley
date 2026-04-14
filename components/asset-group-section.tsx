@@ -4,10 +4,10 @@ import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
 
 const images = [
-  { src: "/4-杭州城投资产集团介绍配图-2.png", alt: "城投资产集团 周边项目密度" },
-  { src: "/4-杭州城投资产集团介绍配图-3.png", alt: "城投资产集团 园区环境" },
-  { src: "/4-杭州城投资产集团介绍配图-4.png", alt: "城投资产集团 街区商业" },
-  { src: "/4-杭州城投资产集团介绍配图-5.png", alt: "城投资产集团 建筑外观" },
+  { src: "https://media-1383535556.cos.ap-shanghai.myqcloud.com/4-%E5%91%A8%E8%BE%B9%E9%A1%B9%E7%9B%AE%E5%AF%86%E5%BA%A6.png", alt: "城投资产集团 周边项目密度" },
+  { src: "https://media-1383535556.cos.ap-shanghai.myqcloud.com/4-%E5%9B%AD%E5%8C%BA%E7%8E%AF%E5%A2%83.png", alt: "城投资产集团 园区环境" },
+  { src: "https://media-1383535556.cos.ap-shanghai.myqcloud.com/4-%E5%95%86%E4%B8%9A%E8%A1%97%E5%8C%BA.png", alt: "城投资产集团 街区商业" },
+  { src: "https://media-1383535556.cos.ap-shanghai.myqcloud.com/4-%E5%BB%BA%E7%AD%91%E5%A4%96%E8%A7%82.png", alt: "城投资产集团 建筑外观" },
 ]
 
 export function AssetGroupSection() {
@@ -76,7 +76,10 @@ export function AssetGroupSection() {
               >
                 <div className="relative h-36 w-full overflow-hidden sm:h-44 md:h-52">
                   <img src={image.src} alt={image.alt} className="h-full w-full object-cover" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-black/5 to-transparent" />
+                </div>
+                <div className="absolute bottom-3 left-3 rounded-full bg-white/80 px-3 py-1 text-xs font-medium text-foreground shadow">
+                  {image.alt}
                 </div>
               </Card>
             ))}

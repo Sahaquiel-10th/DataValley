@@ -59,10 +59,10 @@ const opcPolicies = [
 
 const gallery = [
   { src: "https://media-1383535556.cos.ap-shanghai.myqcloud.com/%E9%A1%B9%E7%9B%AE%E4%BF%AF%E7%9E%B0%E5%9B%BE.jpg", alt: "项目俯瞰" },
-  { src: "/2-未来数智港介绍配图-2.jpg", alt: "项目景观空间" },
-  { src: "/2-未来数智港介绍配图-3.jpg", alt: "项目办公空间" },
+  { src: "https://media-1383535556.cos.ap-shanghai.myqcloud.com/2-%E9%A1%B9%E7%9B%AE%E6%99%AF%E8%A7%82%E7%A9%BA%E9%97%B4.jpg", alt: "项目景观空间" },
+  { src: "https://media-1383535556.cos.ap-shanghai.myqcloud.com/2-%E9%A1%B9%E7%9B%AE%E5%8A%9E%E5%85%AC%E7%A9%BA%E9%97%B4.jpg", alt: "项目办公空间" },
   { src: "https://media-1383535556.cos.ap-shanghai.myqcloud.com/%E9%A1%B9%E7%9B%AE%E4%B8%BB%E5%85%A5%E5%8F%A3.jpg", alt: "项目主入口" },
-  { src: "/2-未来数智港介绍配图-5.jpg", alt: "项目活动空间" },
+  { src: "https://media-1383535556.cos.ap-shanghai.myqcloud.com/2-%E9%A1%B9%E7%9B%AE%E6%B4%BB%E5%8A%A8%E7%A9%BA%E9%97%B4.jpg", alt: "项目活动空间" },
 ]
 
 const deepBlueBadge = "border-transparent bg-[#0B2F6C] text-white"
