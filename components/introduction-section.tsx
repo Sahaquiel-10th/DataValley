@@ -5,6 +5,7 @@ import { ArrowUpRight } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 
 const services = [
   { title: "政务服务", detail: "联动市、区数据局、发改经信局等部门，提供政策解读、项目申报、场景对接。" },
@@ -16,51 +17,51 @@ const services = [
 const opcPolicies = [
   {
     badge: "专项政策",
-    title: "全省首个 OPC 专项政策",
-    content: (
-      <>
-        <p>
-          通过构建“135”赋能体系打造“OPC 创业第一城”。每年安排 1 亿元专项资金，为不同发展阶段的 OPC
-          提供精准服务，计划到 2026 年实现建设 10 个 OPC 社区、集聚 1000 名创业者的目标。
-        </p>
-      </>
-    ),
-  },
-  {
-    badge: "五维赋能",
-    title: "全周期精准服务矩阵",
+    title: "人工智能OPC社区建设相关政策",
     content: (
       <>
         <ul className="grid gap-2 text-foreground">
           <li className="rounded-lg bg-muted/50 px-4 py-3 text-sm leading-relaxed">
-            <span className="font-semibold">空间：</span>提供超 2 万平方米“拎包入驻”社区和人才驿站，实现低成本启动。
+            <span className="font-semibold">创业服务：</span>提供政务云窗和陪跑团，覆盖咨询、开办、法务、人力等全流程。
           </li>
           <li className="rounded-lg bg-muted/50 px-4 py-3 text-sm leading-relaxed">
-            <span className="font-semibold">要素：</span>创新推出 AI 工具会员池，免费提供算力模型等“即开即用”服务。
+            <span className="font-semibold">降低成本：</span>提供不少于2万㎡智创空间，实施OPC育苗计划，青年创业者最高可获50万元资助。
           </li>
           <li className="rounded-lg bg-muted/50 px-4 py-3 text-sm leading-relaxed">
-            <span className="font-semibold">金融：</span>提供最高 50 万元个人贷款及 200 万元投资奖励。
+            <span className="font-semibold">要素保障：</span>开放AI工具池；高质量数据集最高奖励10万元。
           </li>
           <li className="rounded-lg bg-muted/50 px-4 py-3 text-sm leading-relaxed">
-            <span className="font-semibold">场景：</span>开放城市场景并设立最高 300 万元的应用示范补助。
+            <span className="font-semibold">工具奖励：</span>对成效显著的AI工具开发企业，最高奖励100万元。
           </li>
           <li className="rounded-lg bg-muted/50 px-4 py-3 text-sm leading-relaxed">
-            <span className="font-semibold">人才：</span>通过评选“超级个体”给予最高 20 万元奖励及高层次人才认定。
+            <span className="font-semibold">场景开放：</span>每年评选标杆场景项目，按投入30%补助，单个最高300万元。
+          </li>
+          <li className="rounded-lg bg-muted/50 px-4 py-3 text-sm leading-relaxed">
+            <span className="font-semibold">安居保障：</span>人才最长3年租金支持，创始人最长半年。
+          </li>
+          <li className="rounded-lg bg-muted/50 px-4 py-3 text-sm leading-relaxed">
+            <span className="font-semibold">社区矩阵：</span>优秀社区最高奖励200万元。
+          </li>
+          <li className="rounded-lg bg-muted/50 px-4 py-3 text-sm leading-relaxed">
+            <span className="font-semibold">金融服务：</span>个人最高50万、企业最高300万贴息贷款；10亿元专项基金；股权融资按5%奖励，最高200万元。
+          </li>
+          <li className="rounded-lg bg-muted/50 px-4 py-3 text-sm leading-relaxed">
+            <span className="font-semibold">超级个体：</span>评定后最高奖励20万元+杭州市高层次人才名额。
+          </li>
+          <li className="rounded-lg bg-muted/50 px-4 py-3 text-sm leading-relaxed">
+            <span className="font-semibold">活力社群：</span>举办活动按费用50%支持，单个社区最高100万元。
           </li>
         </ul>
-        <p>
-          同时，上城还将搭建“一键通达”线上平台，组建专业陪跑服务团和生态联盟，为创业者提供从落地到产业化的全周期精准赋能。
-        </p>
       </>
     ),
   },
 ]
 
 const gallery = [
-  { src: "/2-未来数智港介绍配图-1.jpg", alt: "项目俯瞰" },
+  { src: "https://media-1383535556.cos.ap-shanghai.myqcloud.com/%E9%A1%B9%E7%9B%AE%E4%BF%AF%E7%9E%B0%E5%9B%BE.jpg", alt: "项目俯瞰" },
   { src: "/2-未来数智港介绍配图-2.jpg", alt: "项目景观空间" },
   { src: "/2-未来数智港介绍配图-3.jpg", alt: "项目办公空间" },
-  { src: "/2-未来数智港介绍配图-4.jpg", alt: "项目主入口" },
+  { src: "https://media-1383535556.cos.ap-shanghai.myqcloud.com/%E9%A1%B9%E7%9B%AE%E4%B8%BB%E5%85%A5%E5%8F%A3.jpg", alt: "项目主入口" },
   { src: "/2-未来数智港介绍配图-5.jpg", alt: "项目活动空间" },
 ]
 
@@ -215,20 +216,74 @@ export function IntroductionSection() {
         </div>
 
         <div className="mt-8 flex justify-center lg:justify-start">
-          <Button
-            asChild
-            size="lg"
-            className="h-auto rounded-full border border-[#0B2F6C]/10 bg-gradient-to-r from-[#0B2F6C] via-[#134AA3] to-[#1E63D6] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[#0B2F6C]/20 transition hover:scale-[1.02] hover:shadow-xl hover:shadow-[#0B2F6C]/25"
-          >
-            <a
-              href="https://media-1383535556.cos.ap-shanghai.myqcloud.com/%E5%85%A5%E9%A9%BB%E6%B5%81%E7%A8%8B%E8%A1%A8.zip"
-              target="_blank"
-              rel="noreferrer"
-            >
-              入驻流程
-              <ArrowUpRight className="size-4" />
-            </a>
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button
+                size="lg"
+                className="h-auto rounded-full border border-[#0B2F6C]/10 bg-gradient-to-r from-[#0B2F6C] via-[#134AA3] to-[#1E63D6] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[#0B2F6C]/20 transition hover:scale-[1.02] hover:shadow-xl hover:shadow-[#0B2F6C]/25"
+              >
+                入驻流程
+                <ArrowUpRight className="size-4" />
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-h-[85vh] max-w-2xl overflow-y-auto border border-muted-foreground/10 bg-card p-0">
+              <div className="flex flex-col gap-6 p-6 md:p-8">
+                <DialogHeader className="text-left">
+                  <Badge variant="secondary" className={`w-fit px-3 py-1 text-xs uppercase tracking-wide ${deepBlueBadge}`}>
+                    入驻流程
+                  </Badge>
+                  <DialogTitle className="text-2xl text-foreground">OPC入驻申请流程</DialogTitle>
+                </DialogHeader>
+
+                <div className="grid gap-4">
+                  <div className="rounded-xl border border-muted/40 bg-muted/30 px-4 py-4">
+                    <p className="text-sm font-semibold text-foreground">第1步：填表申请</p>
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                      请填写《OPC入驻申请表》。表格内容简洁明了，主要围绕您的创业方向、技术背景及项目规划进行信息采集。
+                    </p>
+                  </div>
+
+                  <div className="rounded-xl border border-muted/40 bg-muted/30 px-4 py-4">
+                    <p className="text-sm font-semibold text-foreground">第2步：创业导师评估</p>
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                      提交申请后，园区将组织“创业陪跑团”开展审核。创业导师将从项目创新性、成长潜力及与区域产业契合度等方面进行综合评估。只要你的项目具备清晰的构想和可行的落地路径，且展现出足够的潜力，就有机会通过审核。
+                    </p>
+                  </div>
+
+                  <div className="rounded-xl border border-muted/40 bg-muted/30 px-4 py-4">
+                    <p className="text-sm font-semibold text-foreground">第3步：项目路演</p>
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                      初筛团队将进行项目路演，结合路演效果，最终讨论评定入选团队。
+                    </p>
+                  </div>
+
+                  <div className="rounded-xl border border-muted/40 bg-muted/30 px-4 py-4">
+                    <p className="text-sm font-semibold text-foreground">第4步：注册公司，现场办公</p>
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                      审核通过后，申请人需在园区内完成公司注册并实行现场办公。有助于帮助创业者更充分地融入园区生态而不仅限于工位使用。
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex justify-start">
+                  <Button
+                    asChild
+                    size="lg"
+                    className="h-auto rounded-full border border-[#0B2F6C]/10 bg-gradient-to-r from-[#0B2F6C] via-[#134AA3] to-[#1E63D6] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[#0B2F6C]/20 transition hover:scale-[1.02] hover:shadow-xl hover:shadow-[#0B2F6C]/25"
+                  >
+                    <a
+                      href="https://media-1383535556.cos.ap-shanghai.myqcloud.com/%E5%85%A5%E9%A9%BB%E6%B5%81%E7%A8%8B%E8%A1%A8.zip"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      下载申请表
+                      <ArrowUpRight className="size-4" />
+                    </a>
+                  </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
 
         <div className="mt-8 grid gap-6 lg:grid-cols-[1.2fr,0.8fr]">
